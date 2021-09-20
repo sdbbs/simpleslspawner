@@ -1,3 +1,5 @@
+SimpleLocalProcessSpawner, but with addition of symlink ... The original SimpleLocalProcessSpawner is:
+
 # ⚠️⚠️⚠️ DEPRECATED ⚠️⚠️⚠️ #
 
 SimpleLocalProcessSpawner is now a [part of JupyterHub core](https://github.com/jupyterhub/jupyterhub/blob/3800ceaf9edf33a0171922b93ea3d94f87aa8d91/jupyterhub/spawner.py#L1647). 

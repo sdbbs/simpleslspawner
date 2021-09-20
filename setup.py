@@ -1,12 +1,12 @@
 from setuptools import setup
 
 setup(
-    name='jupyterhub-simplespawner',
+    name='jupyterhub-simpleslspawner',
     version='0.1',
-    description='Simple Local Process spawner for JupyterHub',
-    url='https://github.com/yuvipanda/jupyterhub-simplespawner',
-    author='Yuvi Panda',
+    description='Copy of Simple Local Process spawner for JupyterHub with symlink dir',
+    url='https://github.com/sdbbs/simplespawner',
+    author='Yuvi Panda; sdbbs',
     author_email='yuvipanda@riseup.net',
     license='3 Clause BSD',
-    packages=['simplespawner'],
+    packages=['simpleslspawner'],
 )

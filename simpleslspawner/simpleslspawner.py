@@ -1,10 +1,11 @@
 import os
+import os.path
 from traitlets import Unicode
 
 from jupyterhub.spawner import LocalProcessSpawner
 
 
-class SimpleLocalProcessSpawner(LocalProcessSpawner):
+class SimpleLocalProcessSymlinkSpawner(LocalProcessSpawner):
     """
     A version of LocalProcessSpawner that doesn't require users to exist on
     the system beforehand.
@@ -17,6 +18,12 @@ class SimpleLocalProcessSpawner(LocalProcessSpawner):
         '/tmp/{userid}',
         config=True,
         help='Template to expand to set the user home. {userid} and {username} are expanded'
+    )
+
+    symlink_dir = Unicode(
+        '',
+        config=True,
+        help='String with a path to a folder, that will be symlinked in each home_path_template; if it is an empty or invalid string, no symlinking is performed'
     )
 
     @property
@@ -32,6 +39,13 @@ class SimpleLocalProcessSpawner(LocalProcessSpawner):
             try:
                 os.makedirs(home, 0o755, exist_ok=True)
                 os.chdir(home)
+                symlink_dir_bn = os.path.basename(self.symlink_dir)
+                if os.path.exists(self.symlink_dir):
+                  # check that we haven't added symlink previously - via basename, now that we're chdir'd here:
+                  if not(os.path.exists(symlink_dir_bn)):
+                    os.symlink(self.symlink_dir, "./{}".format(symlink_dir_bn))
+                  else:
+                    print("{} found, not creating symlink".format(symlink_dir_bn))
             except e:
                 print(e)
         return preexec
