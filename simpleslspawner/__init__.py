@@ -1,3 +1,3 @@
-from simplespawner.simplespawner import SimpleLocalProcessSpawner
+from simpleslspawner.simpleslspawner import SimpleLocalProcessSymlinkSpawner
 
-__all__ = [SimpleLocalProcessSpawner]
+__all__ = [SimpleLocalProcessSymlinkSpawner]
