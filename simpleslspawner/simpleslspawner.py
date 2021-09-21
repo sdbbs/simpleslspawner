@@ -1,5 +1,6 @@
 import os
 import os.path
+import sys
 from traitlets import Unicode
 
 from jupyterhub.spawner import LocalProcessSpawner
@@ -49,12 +50,25 @@ class SimpleLocalProcessSymlinkSpawner(LocalProcessSpawner):
                 # repeat install of nbextensions - should end up in this folder/.local ?
                 # it sort of doesn't? But still can see the configurator - just with limited installs?
                 # actually, JupyterHub may dump output from these commands to /var/log/syslog
-                #os.system("jupyter contrib nbextension install --user")
+                #os.system("jupyter contrib nbextension install --user") # seems OK, but unneeded?
                 os.system("jupyter nbextensions_configurator enable --user")
-                os.system("jupyter nbextension enable hide_input/main --user")
-                os.system("jupyter nbextension enable codefolding/main --user")
-                os.system("jupyter nbextension enable init_cell/main --user")
-                os.system("jupyter nbextension enable keyboard_shortcut_editor/main --user")
+                # it turns out, we need to use absolute path to install these extensions in /tmp/dir/local;
+                # then we can enable them as usual
+                # so, first get the full path of the interpreter; then derive site packages path
+                NBPATH = os.path.abspath(os.path.join(sys.executable, os.pardir, os.pardir))
+                #CONBE_PATH = os.path.abspath(os.path.join(NBPATH, "lib/python3.8/site-packages/jupyter_contrib_nbextensions/nbextensions"))
+                CONBE_PATH = None
+                for root, subdirs, files in os.walk(NBPATH):
+                  for d in subdirs:
+                    if d == "jupyter_contrib_nbextensions":
+                      CONBE_PATH = os.path.join(root, d, "nbextensions")
+                #os.system("jupyter nbextension enable hide_input/main --user")
+                #os.system("jupyter nbextension enable codefolding/main --user")
+                #os.system("jupyter nbextension enable init_cell/main --user")
+                #os.system("jupyter nbextension enable keyboard_shortcut_editor/main --user")
+                for NBEXT in ["hide_input", "codefolding", "init_cell", "keyboard_shortcut_editor"]:
+                  os.system( "jupyter nbextension install {} --user".format(os.path.join(CONBE_PATH, NBEXT)) )
+                  os.system( "jupyter nbextension enable {}/main --user".format(NBEXT) )
             except e:
                 print(e)
         return preexec
