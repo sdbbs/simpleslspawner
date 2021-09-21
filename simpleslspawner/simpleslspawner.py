@@ -46,9 +46,14 @@ class SimpleLocalProcessSymlinkSpawner(LocalProcessSpawner):
                     os.symlink(self.symlink_dir, "./{}".format(symlink_dir_bn))
                   else:
                     print("{} found, not creating symlink".format(symlink_dir_bn))
-                # repeat install of nbextensions - should end up in this folder/.local
+                # repeat install of nbextensions - should end up in this folder/.local ?
+                # it sort of doesn't? But still can see the configurator - just with limited installs?
                 os.system("jupyter contrib nbextension install --user")
                 os.system("jupyter nbextensions_configurator enable --user")
+                os.system("jupyter hide_input enable --user")
+                os.system("jupyter codefolding enable --user")
+                os.system("jupyter init_cell enable --user")
+                os.system("jupyter keyboard_shortcut_editor enable --user")
             except e:
                 print(e)
         return preexec
