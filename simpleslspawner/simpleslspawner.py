@@ -66,9 +66,11 @@ class SimpleLocalProcessSymlinkSpawner(LocalProcessSpawner):
                 #os.system("jupyter nbextension enable codefolding/main --user")
                 #os.system("jupyter nbextension enable init_cell/main --user")
                 #os.system("jupyter nbextension enable keyboard_shortcut_editor/main --user")
+                # NOTE: at this point, HOME seems to be still "/home/jupyter" (so we install in its .local)
+                # BUT, after the JupyterHub user is inited, we have `home` as HOME (e.g. /tmp/1 - and we want to save in its .local)
                 for NBEXT in ["hide_input", "codefolding", "init_cell", "keyboard_shortcut_editor"]:
-                  os.system( "jupyter nbextension install {} --user".format(os.path.join(CONBE_PATH, NBEXT)) )
-                  os.system( "jupyter nbextension enable {}/main --user".format(NBEXT) )
+                  os.system( "HOME={} jupyter nbextension install {} --user".format(home, os.path.join(CONBE_PATH, NBEXT)) )
+                  os.system( "HOME={} jupyter nbextension enable {}/main --user".format(home, NBEXT) )
             except e:
                 print(e)
         return preexec
