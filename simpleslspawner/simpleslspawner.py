@@ -46,6 +46,9 @@ class SimpleLocalProcessSymlinkSpawner(LocalProcessSpawner):
                     os.symlink(self.symlink_dir, "./{}".format(symlink_dir_bn))
                   else:
                     print("{} found, not creating symlink".format(symlink_dir_bn))
+                # repeat install of nbextensions - should end up in this folder/.local
+                os.system("jupyter contrib nbextension install --user")
+                os.system("jupyter nbextensions_configurator enable --user")
             except e:
                 print(e)
         return preexec
